@@ -1,4 +1,4 @@
-# End-to-end-Youtube-Sentiment
+# Youtube-Sentiment-Insights
 
 
 conda create -n youtube python=3.11 -y
@@ -39,10 +39,6 @@ http://localhost:5000/predict
 chrome://extensions
 
 
-## how to get youtube api key from gcp:
-
-https://www.youtube.com/watch?v=i_FdiQMwKiw
-
 
 
 # AWS-CICD-Deployment-with-Github-Actions
@@ -52,10 +48,10 @@ https://www.youtube.com/watch?v=i_FdiQMwKiw
 ## 2. Create IAM user for deployment
 
 	#with specific access
-
+ 
 	1. EC2 access : It is virtual machine
 
-	2. ECR: Elastic Container registry to save your docker image in aws
+	2. ECR: Elastic Container Registry(alternative of DockerHub available) to save your docker image in aws
 
 
 	#Description: About the deployment
@@ -70,7 +66,7 @@ https://www.youtube.com/watch?v=i_FdiQMwKiw
 
 	5. Lauch your docker image in EC2
 
-	#Policy:
+	#Policy to be attached to ECR Repo:
 
 	1. AmazonEC2ContainerRegistryFullAccess
 
@@ -78,7 +74,7 @@ https://www.youtube.com/watch?v=i_FdiQMwKiw
 
 	
 ## 3. Create ECR repo to store/save docker image
-    - Save the URI: 315865595366.dkr.ecr.us-east-1.amazonaws.com/youtube
+    - Save the URI: 302585542861.dkr.ecr.us-east-1.amazonaws.com/yt-sent-anal
 
 	
 ## 4. Create EC2 machine (Ubuntu) 
@@ -112,8 +108,6 @@ https://www.youtube.com/watch?v=i_FdiQMwKiw
 
     AWS_SECRET_ACCESS_KEY=
 
-    AWS_REGION = us-east-1
+    AWS_ECR_LOGIN_URI = 302585542861.dkr.ecr.us-east-1.amazonaws.com
 
-    AWS_ECR_LOGIN_URI = demo>>  566373416292.dkr.ecr.ap-south-1.amazonaws.com
-
-    ECR_REPOSITORY_NAME = simple-app
+    ECR_REPOSITORY_NAME = yt-sent-anal

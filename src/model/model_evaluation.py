@@ -8,7 +8,6 @@ import mlflow.sklearn
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 import os
-from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
 import json
@@ -30,19 +29,6 @@ file_handler.setFormatter(formatter)
 
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
-
-def resolve_tracking_uri(root_dir: Path) -> str:
-    """Determine which MLflow tracking URI to use."""
-    env_uri = os.getenv("MLFLOW_TRACKING_URI")
-    if env_uri:
-        logger.debug("Using MLflow tracking URI from environment: %s", env_uri)
-        return env_uri
-
-    local_store = (root_dir / "mlruns").resolve()
-    local_store.mkdir(parents=True, exist_ok=True)
-    uri = local_store.as_uri()
-    logger.debug("Using local MLflow tracking URI: %s", uri)
-    return uri
 
 
 def load_data(file_path: str) -> pd.DataFrame:
@@ -128,7 +114,7 @@ def save_model_info(run_id: str, model_path: str, file_path: str) -> None:
     try:
         # Create a dictionary with the info you want to save
         model_info = {
-            'run_id': run_id,  # to register the model later on mlflow
+            'run_id': run_id,
             'model_path': model_path
         }
         # Save the dictionary as a JSON file
@@ -141,29 +127,26 @@ def save_model_info(run_id: str, model_path: str, file_path: str) -> None:
 
 
 def main():
-    root_dir = Path(__file__).resolve().parents[2]
+    mlflow.set_tracking_uri("http://ec2-54-87-170-67.compute-1.amazonaws.com:5000/")
 
-    tracking_uri = resolve_tracking_uri(root_dir)
-    mlflow.set_tracking_uri(tracking_uri)
-
-    logger.debug("MLflow tracking URI configured: %s", tracking_uri)
     mlflow.set_experiment('dvc-pipeline-runs')
     
     with mlflow.start_run() as run:
         try:
             # Load parameters from YAML file
-            params = load_params(root_dir / 'params.yaml')
+            root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+            params = load_params(os.path.join(root_dir, 'params.yaml'))
 
             # Log parameters
             for key, value in params.items():
                 mlflow.log_param(key, value)
             
             # Load model and vectorizer
-            model = load_model(root_dir / 'lgbm_model.pkl')
-            vectorizer = load_vectorizer(root_dir / 'tfidf_vectorizer.pkl')
+            model = load_model(os.path.join(root_dir, 'lgbm_model.pkl'))
+            vectorizer = load_vectorizer(os.path.join(root_dir, 'tfidf_vectorizer.pkl'))
 
             # Load test data for signature inference
-            test_data = load_data(root_dir / 'data/interim/test_processed.csv')
+            test_data = load_data(os.path.join(root_dir, 'data/interim/test_processed.csv'))
 
             # Prepare test data
             X_test_tfidf = vectorizer.transform(test_data['clean_comment'].values)
@@ -189,7 +172,7 @@ def main():
             save_model_info(run.info.run_id, model_path, 'experiment_info.json')
 
             # Log the vectorizer as an artifact
-            mlflow.log_artifact(root_dir / 'tfidf_vectorizer.pkl')
+            mlflow.log_artifact(os.path.join(root_dir, 'tfidf_vectorizer.pkl'))
 
             # Evaluate model and get metrics
             report, cm = evaluate_model(model, X_test_tfidf, y_test)

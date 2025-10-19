@@ -3,7 +3,7 @@ stages:
     cmd: python src/data/data_ingestion.py
     deps:
     - src/data/data_ingestion.py
-    params:
+    params: # parameters to be used in this stage
     - data_ingestion.test_size
     outs:
     - data/raw
@@ -47,7 +47,6 @@ stages:
     - src/model/model_evaluation.py
     outs:
     - experiment_info.json
-
 
   
   model_registration:

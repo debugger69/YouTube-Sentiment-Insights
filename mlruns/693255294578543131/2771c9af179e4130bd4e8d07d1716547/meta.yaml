@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/sanja/OneDrive/Desktop/YouTube-Sentiment-Insights/mlruns/693255294578543131/2771c9af179e4130bd4e8d07d1716547/artifacts
+end_time: 1760707533314
+entry_point_name: ''
+experiment_id: '693255294578543131'
+lifecycle_stage: active
+run_id: 2771c9af179e4130bd4e8d07d1716547
+run_name: rogue-fox-34
+run_uuid: 2771c9af179e4130bd4e8d07d1716547
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1760707528610
+status: 3
+tags: []
+user_id: sanja
