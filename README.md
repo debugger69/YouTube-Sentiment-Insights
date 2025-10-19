@@ -108,6 +108,8 @@ chrome://extensions
 
     AWS_SECRET_ACCESS_KEY=
 
+	AWS_REGION = us-east-1
+
     AWS_ECR_LOGIN_URI = 302585542861.dkr.ecr.us-east-1.amazonaws.com
 
     ECR_REPOSITORY_NAME = yt-sent-anal
